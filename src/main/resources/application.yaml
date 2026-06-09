@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: ilearning-web-management
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/ilearning
+    type: com.alibaba.druid.pool.DruidDataSource
+    username: root
+    password: 1234
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 100MB
+#mybatis配置
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: true
+    
