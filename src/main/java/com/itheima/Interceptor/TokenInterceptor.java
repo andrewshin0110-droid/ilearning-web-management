@@ -20,7 +20,7 @@ public class TokenInterceptor implements HandlerInterceptor {
         String url = request.getRequestURL().toString();
 
         //2. 判斷請求url中是否包含login，如果包含，說明是登錄操作，放行。
-        if(url.contains("login")){ //登录请求
+        if(url.contains("login")){ //登錄请求
             log.info("登錄请求 , 直接放行");
             return true;
         }
@@ -29,7 +29,7 @@ public class TokenInterceptor implements HandlerInterceptor {
         String jwt = request.getHeader("token");
 
         //4. 判断令牌是否存在，如果不存在，返回錯誤结果（未登錄）。
-        if(!StringUtils.hasLength(jwt)){ //jwt为空
+        if(!StringUtils.hasLength(jwt)){ //jwt為空
             log.info("獲取到jwt令牌為空, 返回錯誤结果");
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return false;
@@ -39,8 +39,10 @@ public class TokenInterceptor implements HandlerInterceptor {
         try {
             JwtUtils.parseJWT(jwt);
         } catch (Exception e) {
-            e.printStackTrace();
-            log.info("解析令牌失敗, 返回錯誤结果");
+            //會把異常堆疊直接印在伺服器的標準輸出（Console），這非常消耗記憶體與 CPU 效能，在高併發時甚至可能導致伺服器卡死。此外，這也是資安漏洞，萬一報錯訊息直接流向前端，會暴露後端資料庫結構。
+            //e.printStackTrace();
+            //業界標準防禦寫法：改使用 log.error 記錄異常
+            log.error("Token 解析失敗，非法請求！錯誤訊息: ", e);
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return false;
         }
